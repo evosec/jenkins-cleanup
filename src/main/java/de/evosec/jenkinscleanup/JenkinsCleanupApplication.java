@@ -94,6 +94,7 @@ public class JenkinsCleanupApplication implements ApplicationRunner {
 	}
 
 	private void delete(Path path) {
+		LOG.info("Deleting {}", path);
 		if (path == null || !Files.exists(path)) {
 			return;
 		}
