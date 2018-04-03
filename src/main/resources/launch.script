@@ -1,0 +1,7 @@
+#!/bin/bash
+
+set -o errexit
+
+java -jar $0 "$@"
+
+exit 0
