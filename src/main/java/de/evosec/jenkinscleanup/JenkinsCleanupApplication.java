@@ -65,6 +65,7 @@ public class JenkinsCleanupApplication implements ApplicationRunner {
 		    "tomcat", "jetty-", "jbd_tmp_", "jbd_classpath_", "npm-",
 		    "ansible_", "ansible-tmp-", "metro-cache-", "metro-bundler-cache-",
 		    "resource-");
+		List<String> directoriesMatching = Arrays.asList("[a-f0-9-]{0,63}");
 
 		for (Path path : Files.newDirectoryStream(directory)) {
 			if (lastModifiedBefore(path, sixHoursAgo)) {
@@ -85,7 +86,9 @@ public class JenkinsCleanupApplication implements ApplicationRunner {
 					            .map(Path::toString)
 					            .orElse("");
 					if (directoriesStartingWith.stream()
-					    .anyMatch(directoryName::startsWith)) {
+					    .anyMatch(directoryName::startsWith)
+					        || directoriesMatching.stream()
+					            .anyMatch(directoryName::matches)) {
 						delete(path);
 					}
 				}
