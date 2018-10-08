@@ -13,6 +13,7 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -68,17 +69,23 @@ public class JenkinsCleanupApplication implements ApplicationRunner {
 		for (Path path : Files.newDirectoryStream(directory)) {
 			if (lastModifiedBefore(path, sixHoursAgo)) {
 				if (Files.isRegularFile(path)) {
-					if (filesStartingWith.stream().anyMatch(
-					    s -> path.getFileName().toString().startsWith(s))) {
+					String fileName = Optional.ofNullable(path.getFileName())
+					    .map(Path::toString)
+					    .orElse("");
+					if (filesStartingWith.stream()
+					    .anyMatch(fileName::startsWith)) {
 						delete(path);
 					}
-					if (filesEndingWith.stream().anyMatch(
-					    s -> path.getFileName().toString().endsWith(s))) {
+					if (filesEndingWith.stream().anyMatch(fileName::endsWith)) {
 						delete(path);
 					}
 				} else if (Files.isDirectory(path)) {
-					if (directoriesStartingWith.stream().anyMatch(
-					    s -> path.getFileName().toString().startsWith(s))) {
+					String directoryName =
+					        Optional.ofNullable(path.getFileName())
+					            .map(Path::toString)
+					            .orElse("");
+					if (directoriesStartingWith.stream()
+					    .anyMatch(directoryName::startsWith)) {
 						delete(path);
 					}
 				}
