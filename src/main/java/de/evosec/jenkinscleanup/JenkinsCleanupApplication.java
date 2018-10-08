@@ -42,7 +42,8 @@ public class JenkinsCleanupApplication implements ApplicationRunner {
 		Path directory = Paths.get(properties.getDirectory());
 		if (!directory.isAbsolute()) {
 			directory = Paths.get(System.getProperty("user.dir"))
-			    .resolve(directory).toAbsolutePath();
+			    .resolve(directory)
+			    .toAbsolutePath();
 		}
 		if (Files.notExists(directory)) {
 			LOG.warn("Directory {} does not exist. Exiting.", directory);
